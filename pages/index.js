@@ -1,7 +1,18 @@
-import { ConnectWallet } from "@thirdweb-dev/react";
+import {
+  ConnectWallet,
+  Web3Button,
+  useAddress,
+  useClaimNFT,
+  useContract,
+} from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  const walletAddress = useAddress();
+  const contractAddress = "0x1fa4562ee54e02df9ef1a723ee2d4aaddf80df79";
+  const { contract } = useContract(contractAddress);
+  const { mutateAsync: claimNFT } = useClaimNFT(contract);
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -17,6 +28,20 @@ export default function Home() {
 
         <div className={styles.connect}>
           <ConnectWallet />
+        </div>
+
+        <div className={styles.connect}>
+          <Web3Button
+            contractAddress={contractAddress}
+            action={() =>
+              claimNFT({
+                to: walletAddress,
+                quantity: 1,
+              })
+            }
+          >
+            Claim NFT
+          </Web3Button>
         </div>
 
         <div className={styles.grid}>
